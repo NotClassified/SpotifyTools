@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="AVWAIi" name="SpotifyTools" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              cppLanguageStandard="17">
+  <MAINGROUP id="rq2uzH" name="SpotifyTools">
+    <GROUP id="{57C58450-9050-C337-516A-EFDE997D1414}" name="Source">
+      <FILE id="Rorsom" name="JsonStream.cpp" compile="1" resource="0" file="Source/JsonStream.cpp"/>
+      <FILE id="fzoaIX" name="JsonStream.h" compile="0" resource="0" file="Source/JsonStream.h"/>
+      <FILE id="MHtyvx" name="Globals.h" compile="0" resource="0" file="Source/Globals.h"/>
+      <FILE id="YmQvCR" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="Hy3hZx" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="vNRe6K" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="SpotifyTools"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="SpotifyTools"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="C:/Users/prest/Documents/Installers/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:/Users/prest/Documents/Installers/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="C:/Users/prest/Documents/Installers/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="C:/Users/prest/Documents/Installers/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:/Users/prest/Documents/Installers/JUCE/modules"/>
+        <MODULEPATH id="user_utilities" path="../../ProjuceProjects"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="user_utilities" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+  </MODULES>
+</JUCERPROJECT>
