@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <chrono>
 #include "Globals.h"
 #include "JsonStream.h"
 
@@ -62,7 +63,11 @@ public:
         int second = 0;
     };
 
-    const int PST_TO_GMT = -7 * 60 * 60;
+    //miliseconds
+    juce::int64 getCurrentTimeSinceEpoch() { return std::chrono::system_clock::now().time_since_epoch().count() / 10000; }
+
+    //miliseconds
+    const int PST_TO_GMT = -8 * 60 * 60 * 1000;
 
 
     struct Track
@@ -84,13 +89,33 @@ public:
         jString timePlayed;
     };
 
+    vArray<Track*> readTracks(const jString& jsonString)
+    {
+        vArray<Track*> output;
+
+        json::Stream stream(juce::SystemClipboard::getTextFromClipboard());
+        if (stream.getStart().isNotValid())
+            return output;
+
+
+        for (auto& item : stream["items"].getArray())
+        {
+            output.add(new Track(item["track"]["artists"].getArray()[0]["name"].getString(),
+                                       item["track"]["album"]["name"].getString(),
+                                       item["track"]["name"].getString(),
+                                       item["played_at"].getString()));
+        }
+        return output;
+    }
+
     vArray<Track*> playedTracks;
 
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
 
-    juce::TextButton readJsonFromClipboardButton{ "Get Recently Played Albums" };
+    juce::TextButton showRecentAlbumsButton{ "Get Recently Played Albums" };
+    juce::TextButton showAllRecentTracksButton{ "Get Recently Played Tracks" };
     juce::TextEditor resultsView;
 
 private:

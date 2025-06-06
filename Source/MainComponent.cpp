@@ -1,26 +1,14 @@
 #include "MainComponent.h"
-#include <chrono>
 
 //==============================================================================
 MainComponent::MainComponent()
 {
-    const auto timeNow = std::chrono::system_clock::now();
-    juce::SystemClipboard::copyTextToClipboard(jString(timeNow.time_since_epoch().count() / 1000 + PST_TO_GMT));
+    juce::SystemClipboard::copyTextToClipboard(jString(getCurrentTimeSinceEpoch()));
 
-    addAndMakeVisible(readJsonFromClipboardButton);
-    readJsonFromClipboardButton.onClick = [=]
+    addAndMakeVisible(showRecentAlbumsButton);
+    showRecentAlbumsButton.onClick = [=]
     {
-        json::Stream stream(juce::SystemClipboard::getTextFromClipboard());
-        if (stream.getStart().isNotValid())
-            return;
-        
-        for (auto& item : stream["items"].getArray())
-        {
-            playedTracks.add(new Track(item["track"]["artists"].getArray()[0]["name"].getString(), 
-                                       item["track"]["album"]["name"].getString(), 
-                                       item["track"]["name"].getString(),
-                                       item["played_at"].getString()));
-        }
+        playedTracks.add(readTracks(juce::SystemClipboard::getTextFromClipboard()));
 
         //get next before time
         {
@@ -31,22 +19,19 @@ MainComponent::MainComponent()
             jString& timePlayedString = playedTracks.getLast()->timePlayed;
             tm lastTrackPlayTime = { 0 };
             lastTrackPlayTime.tm_year = timePlayedString.substring(0, 4).getIntValue() - 1900;
-            lastTrackPlayTime.tm_mon = timePlayedString.substring(5, 7).getIntValue();
+            lastTrackPlayTime.tm_mon = timePlayedString.substring(5, 7).getIntValue() - 1;
             lastTrackPlayTime.tm_mday = timePlayedString.substring(8, 10).getIntValue();
-            lastTrackPlayTime.tm_hour = timePlayedString.substring(11, 13).getIntValue();
             lastTrackPlayTime.tm_min = timePlayedString.substring(14, 16).getIntValue();
             lastTrackPlayTime.tm_sec = timePlayedString.substring(17, 19).getIntValue();
 
-            time_t timeSinceEpochGMT = mktime(&lastTrackPlayTime) + PST_TO_GMT;
-            time_t timeSinceEpochMS = (timeSinceEpochGMT - 1) * 1000;
+            lastTrackPlayTime.tm_hour = 0;
+            mktime(&lastTrackPlayTime);
+            lastTrackPlayTime.tm_hour = timePlayedString.substring(11, 13).getIntValue(); //override what mktime() does since it'll change the hour if the DST is wrong
+
+            time_t timeSinceEpochGMT = mktime(&lastTrackPlayTime);
+            time_t timeSinceEpochMS = timeSinceEpochGMT * 1000 + PST_TO_GMT;
             juce::SystemClipboard::copyTextToClipboard(std::to_string(timeSinceEpochMS));
         }
-
-        //jString nextUrl = stream["next"].getString();
-        //int beforeKeyEndIndex = nextUrl.indexOf("before=") + 7;
-        //jString timeStampString = nextUrl.substring(beforeKeyEndIndex, nextUrl.indexOf(beforeKeyEndIndex, "&"));
-        //juce::int64 nextTimestampMS = timeStampString.getLargeIntValue() * 1000;
-        //juce::SystemClipboard::copyTextToClipboard(jString(nextTimestampMS));
 
         vArray<Track*> playedAlbums;
         Track* previousTrack = nullptr;
@@ -62,7 +47,18 @@ MainComponent::MainComponent()
         jString resultsString = "";
         for (auto& i : playedAlbums)
         {
-            resultsString += i->artistName + " - " + i->albumName + "\n";
+            resultsString += i->artistName + " - " + i->albumName + " - " + i->timePlayed + "\n";
+        }
+        resultsView.setText(resultsString);
+    };
+
+    addAndMakeVisible(showAllRecentTracksButton);
+    showAllRecentTracksButton.onClick = [=]
+    {
+        jString resultsString = "";
+        for (auto& i : readTracks(juce::SystemClipboard::getTextFromClipboard()))
+        {
+            resultsString += i->artistName + " - " + i->albumName + " - " + i->timePlayed + "\n";
         }
         resultsView.setText(resultsString);
     };
@@ -75,10 +71,6 @@ MainComponent::MainComponent()
 
 MainComponent::~MainComponent()
 {
-    Bounds localBounds = getLocalBounds();
-
-    readJsonFromClipboardButton.setBounds(localBounds.removeFromTop(25));
-    resultsView.setBounds(localBounds);
 }
 
 //==============================================================================
@@ -92,6 +84,7 @@ void MainComponent::resized()
 {
     Bounds localBounds = getLocalBounds();
 
-    readJsonFromClipboardButton.setBounds(localBounds.removeFromTop(25));
+    showRecentAlbumsButton.setBounds(localBounds.removeFromTop(25));
+    showAllRecentTracksButton.setBounds(localBounds.removeFromTop(25));
     resultsView.setBounds(localBounds);
 }
