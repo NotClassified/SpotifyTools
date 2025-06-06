@@ -27,7 +27,6 @@
         <MODULEPATH id="juce_events" path="C:/Users/prest/Documents/Installers/JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="C:/Users/prest/Documents/Installers/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="C:/Users/prest/Documents/Installers/JUCE/modules"/>
-        <MODULEPATH id="user_utilities" path="../../ProjuceProjects"/>
       </MODULEPATHS>
     </VS2022>
   </EXPORTFORMATS>
@@ -37,6 +36,5 @@
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="user_utilities" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
   </MODULES>
 </JUCERPROJECT>
