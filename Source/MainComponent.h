@@ -10,6 +10,8 @@
 /*
     This component lives inside our window, and this is where you should put all
     your controls and content.
+
+    Recent Tracks Web API: https://developer.spotify.com/documentation/web-api/reference/get-recently-played
 */
 class MainComponent  : public juce::Component
 {
@@ -67,7 +69,7 @@ public:
     juce::int64 getCurrentTimeSinceEpoch() { return std::chrono::system_clock::now().time_since_epoch().count() / 10000; }
 
     //miliseconds
-    const int PST_TO_GMT = -8 * 60 * 60 * 1000;
+    const int PST_TO_GMT = -7 * 60 * 60 * 1000;
 
 
     struct Track
@@ -114,6 +116,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    juce::TextButton getCurrentTime{ "Get Current Time" };
     juce::TextButton showRecentAlbumsButton{ "Get Recently Played Albums" };
     juce::TextButton showAllRecentTracksButton{ "Get Recently Played Tracks" };
     juce::TextEditor resultsView;

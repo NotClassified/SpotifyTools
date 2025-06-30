@@ -3,7 +3,11 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
-    juce::SystemClipboard::copyTextToClipboard(jString(getCurrentTimeSinceEpoch()));
+    addAndMakeVisible(getCurrentTime);
+    getCurrentTime.onClick = [=]
+    {
+        juce::SystemClipboard::copyTextToClipboard(jString(getCurrentTimeSinceEpoch()));
+    };
 
     addAndMakeVisible(showRecentAlbumsButton);
     showRecentAlbumsButton.onClick = [=]
@@ -84,6 +88,7 @@ void MainComponent::resized()
 {
     Bounds localBounds = getLocalBounds();
 
+    getCurrentTime.setBounds(localBounds.removeFromTop(25));
     showRecentAlbumsButton.setBounds(localBounds.removeFromTop(25));
     showAllRecentTracksButton.setBounds(localBounds.removeFromTop(25));
     resultsView.setBounds(localBounds);
