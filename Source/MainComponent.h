@@ -10,8 +10,6 @@
 /*
     This component lives inside our window, and this is where you should put all
     your controls and content.
-
-    Recent Tracks Web API: https://developer.spotify.com/documentation/web-api/reference/get-recently-played
 */
 class MainComponent  : public juce::Component
 {
